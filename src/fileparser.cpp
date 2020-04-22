@@ -1,40 +1,43 @@
 #include <iostream>
 #include <fstream>
 
+
+
 #include "fileparser.hpp"
 
-/**
- * The FileParser class parses the input file, turning each line into a Document. The Document struct is a tuple with docID and contents.
- * 
- * 
- */ 
+using namespace std;
 
-FileParser::FileParser(std::string filename){
-    this->filename = filename;
+FileParser::FileParser(std::string filename_in){
+    filename = filename_in;
 }
 
-
-/**
- * Creates documents based on the input file. Each line is a new document. A vector of these documents is returned. 
- */ 
-std::vector<Document> FileParser::parse(){
-    using namespace std;
-    int nextID = 0;
-    ifstream input_file;
-    input_file.open(filename);
-    if(!input_file.is_open()){
-        cerr << "Input file is invalid. Exiting..." << endl;
-        exit(-1);
+string FileParser::poll(){
+    string ret_val = "";
+    if(!file.eof()){
+        getline(file, ret_val);
     }
-    string line = "";
-    Document d1;
-    while(getline(input_file, line)){
-        d1.id = nextID;
-        d1.contents = line;
-        nextID++;
-        document_list.push_back(d1);
-    }
-    input_file.close();
-
-    return document_list;
+    return ret_val;
 }
+
+std::vector<string> FileParser::poll_lines(int num_lines){
+    int k = 0;
+    vector<string> ret_val;
+    string line ;
+    while(!file.eof() && k < num_lines){
+        do{
+            std::getline( file , line );
+            ret_val.push_back(line);
+        } while( line != "" );
+        
+    }
+    return ret_val;
+}
+
+void FileParser::open(){
+    file.open(filename);
+}
+
+void FileParser::close(){
+    file.close();
+}
+
