@@ -3,21 +3,15 @@
 
 #include <string>
 #include <vector>
-#include <fstream>
+#include "tokenizer.hpp"
 
 class FileParser{
     public:
-        FileParser(std::string filename_in);
-        std::string poll();
-        std::vector<std::string> poll_lines(int num_lines);
-        void open();
-        void close();
+        FileParser(std::string filename);
+        std::vector<Document> parse();
     private:
         std::string filename;
-        std::fstream file;
+        std::vector<Document> document_list;
 };
-
-
-
 
 #endif
