@@ -37,7 +37,7 @@ std::vector<std::string> Tokenizer::removeSpaces(std::string line){
 void Tokenizer::remove_punct(Document &d1, char symbols[]){
     std::string::iterator prev = d1.contents.begin();
     std::string::iterator cur;
-    if(*prev == '.' || *prev == '-' || *prev == '\''   || *prev == '(' || *prev == ')' || *prev == ',' || *prev == '?' || *prev == ';' || *prev == ':' || *prev == '%' || *prev == '$'|| *prev == '#'|| *prev == '@'|| *prev == '!'|| *prev== '&'|| *prev== '*' || *prev == '`' || *prev == 39){
+    if(*prev == '.' || *prev == '-' || *prev == '\''   || *prev == '(' || *prev == ')' || *prev == ',' || *prev == '?' || *prev == ';' || *prev == ':' || *prev == '%' || *prev == '$'|| *prev == '#'|| *prev == '@'|| *prev == '!'|| *prev== '&'|| *prev== '*' || *prev == '`' || *prev == 39  || *prev == '\"'){
         prev = d1.contents.erase(prev);
         cur = prev + 1;
     }
@@ -69,7 +69,7 @@ void Tokenizer::remove_punct(Document &d1, char symbols[]){
                     prev =  cur -1;
                 }
             }
-            if(*cur == '-' || *cur == '\'' || *cur == '(' || *cur == ')' || *cur == ',' || *cur == '?' || *cur == ';' || *cur == ':' || *cur == '%' || *cur == '$'|| *cur == '#'|| *cur == '@'|| *cur == '!'|| *cur == '&'|| *cur == '*' || *cur == '`' || *cur == 39){
+            if(*cur == '-' || *cur == '\'' || *cur == '(' || *cur == ')' || *cur == ',' || *cur == '?' || *cur == ';' || *cur == ':' || *cur == '%' || *cur == '$'|| *cur == '#'|| *cur == '@'|| *cur == '!'|| *cur == '&'|| *cur == '*' || *cur == '`' || *cur == 39 || *cur == '”'){
                 cur = d1.contents.erase(cur);
                 prev = cur -1;
             }
@@ -89,6 +89,7 @@ void Tokenizer::add_to_term_list(std::string termIn, int docIDIn){
     TermPair temp;
     temp.docID = docIDIn;
     temp.term = termIn;
+    std::cout << termIn << std::endl;
     terms.push_back(temp);
 }
 
@@ -115,6 +116,7 @@ std::vector<TermPair> Tokenizer::tokenize(){
     FileParser fp(inp_file);
     docs = fp.parse();
     for(auto i = docs.begin(); i != docs.end(); ++i){
+        
         case_fold(*i);
         remove_punct(*i, C_REMOVE);
         tmp_str = removeSpaces(i->contents);
