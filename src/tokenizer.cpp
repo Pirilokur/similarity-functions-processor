@@ -69,7 +69,7 @@ void Tokenizer::remove_punct(Document &d1, char symbols[]){
                     prev =  cur -1;
                 }
             }
-            if(*cur == '-' || *cur == '\'' || *cur == '(' || *cur == ')' || *cur == ',' || *cur == '?' || *cur == ';' || *cur == ':' || *cur == '%' || *cur == '$'|| *cur == '#'|| *cur == '@'|| *cur == '!'|| *cur == '&'|| *cur == '*' || *cur == '`' || *cur == 39 || *cur == '”'){
+            if(*cur == '-' || *cur == '\'' || *cur == '(' || *cur == ')' || *cur == ',' || *cur == '?' || *cur == ';' || *cur == ':' || *cur == '%' || *cur == '$'|| *cur == '#'|| *cur == '@'|| *cur == '!'|| *cur == '&'|| *cur == '*' || *cur == '`' || *cur == 39){
                 cur = d1.contents.erase(cur);
                 prev = cur -1;
             }
@@ -89,7 +89,6 @@ void Tokenizer::add_to_term_list(std::string termIn, int docIDIn){
     TermPair temp;
     temp.docID = docIDIn;
     temp.term = termIn;
-    std::cout << termIn << std::endl;
     terms.push_back(temp);
 }
 

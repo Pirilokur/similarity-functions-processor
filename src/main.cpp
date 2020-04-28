@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 
+#include <cstdlib>
 #include "main.hpp"
 #include "tokenizer.hpp"
 #include "postinghandler.hpp"
@@ -10,6 +11,7 @@
 
 int main(int argc, char * argv[]){
 		//argument parsing
+		/*
 	int k;
 	bool inp_flag = false;
 	const char * FLAG_LIST = "i:d:p:h";
@@ -53,5 +55,8 @@ int main(int argc, char * argv[]){
 	//Run the PostingHandler to create the dictionary entries list.
 	PostingHandler p1(t_pairs);
 	d_entries = p1.calculate();
+	*/
+	std::string cmd = "./dictionary -i 200_content.txt";
+	std::system(cmd.c_str());
 	
 }
