@@ -31,7 +31,7 @@ void Results::print(){
         std::cerr << "No work" << std::endl;
     }
     for(auto i = entries.begin(); i != entries.end(); ++i){
-        dictionary_writer << i->term << "\t" << offset << std::endl;
+        dictionary_writer << i->term << "\t" << i->document_frequency << "\t" << offset << std::endl;
         offset = offset + i->document_frequency;
         for(auto k = i->p_list.begin(); k != i->p_list.end(); ++k){
             posting_writer << k->docID << "\t" << k->term_frequency << std::endl;
