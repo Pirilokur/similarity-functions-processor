@@ -2,6 +2,8 @@ all: similarity dictionary
 
 TARGET_EXEC ?= similarity dictionary
 
+INTM_FILES ?= postings.txt dictionary.txt
+
 SRC_DIRS ?= ./src
 BUILD_DIR ?= ./BUILD
 
@@ -55,6 +57,7 @@ clean:
 	$(RM) -r $(BUILD_DIR)
 	$(RM) -r $(DICT_BUILD_DIR)
 	$(RM) $(TARGET_EXEC)
+	$(RM) $(INTM_FILES)
 
 -include $(DEPS)
 
