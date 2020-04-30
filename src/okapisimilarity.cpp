@@ -24,7 +24,8 @@ double OkapiSimilarity::idf_weight(std::string term){
 
 
 double OkapiSimilarity::term_weight(std::string term){
-
+	double k=1.2;
+	double b=0.75;
 }
 
 double OkapiSimilarity::query_weight(std::string term){
