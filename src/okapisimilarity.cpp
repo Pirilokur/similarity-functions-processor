@@ -1,6 +1,6 @@
 #include "okapisimilarity.hpp"
 #include "stemmer.h"
-#include "tokenizer.h"
+#include "tokenizer.hpp"
 
 #include <cstring>
 #include <iostream>
