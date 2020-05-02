@@ -4,6 +4,7 @@
 #include <cctype>
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/split.hpp>
+#include <fstream>
 
 #include "fileparser.hpp"
 #include "stemmer.h"
@@ -111,17 +112,23 @@ void Tokenizer::sort_terms(){
  */ 
 std::vector<TermPair> Tokenizer::tokenize(){  
     char C_REMOVE[] = {'-', '\'', '(', ')', ',', '?', ';', ':', '%', '$', '#', '@', '!', '&','*'};
+    std::ofstream size_writer;
+    size_writer.open("size.txt", std::ofstream::out | std::ofstream::app);
     std::vector<std::string> tmp_str;
     FileParser fp(inp_file);
     docs = fp.parse();
+    int n = 0;
     for(auto i = docs.begin(); i != docs.end(); ++i){
         case_fold(*i);
         remove_punct(*i, C_REMOVE);
         tmp_str = removeSpaces(i->contents);
+        size_writer << tmp_str.size() << "\n";
         for(auto s = tmp_str.begin(); s != tmp_str.end(); ++s){
             add_to_term_list(*s, i->id);
         }
+        n++;
     }
+    size_writer.close();
 
     //runs the terms through Porter's stemmer.  
     for(auto i = terms.begin(); i != terms.end(); ++i){
