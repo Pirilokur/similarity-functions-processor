@@ -106,6 +106,8 @@ void QueryHandler::process_query(){
    Posting temp;
    vector<double> posting_weight;
    vector<double> query_weight;
+   vector<double> doc_freq; // document frequency to be used for okapi
+   vector <double> raw_tf; // tf to be used for okapi
    while(!is_empty){
         int min = 2000;
        //get the next smallest document
@@ -115,6 +117,10 @@ void QueryHandler::process_query(){
                min = temp.document_id;
            }
        }
+
+
+
+
        for(int i = 0; i < number_of_terms; ++i){
            temp = term_posting_list[i].front();
            if(temp.document_id == min){
@@ -130,7 +136,10 @@ void QueryHandler::process_query(){
                 //get the cosine similarity now
                 terms.documents[temp.document_id].cosine_similarity = calculate_cosine_similarity(posting_weight, query_weight);
                 //get the okapi similarity
-                terms.documents[temp.document_id].cosine_similarity = calculate_okapi_similarity(terms.get_dictionary_entry(query.terms.at(i)).document_freq, query_weight);
+                
+                doc_freq.push_back(terms.get_dictionary_entry(query.terms.at(i)).document_freq);
+                raw_tf.push_back(temp.weight_tf);
+                terms.documents[temp.document_id].okapi_similarity = calculate_okapi_similarity(doc_freq,raw_tf);
            }
        }
        //now check if all queues are empty
@@ -144,15 +153,23 @@ void QueryHandler::process_query(){
    }
 }
 
-double QueryHandler::calculate_okapi_similarity(vector<double> df, vector<double> raw_tf, double dl, double avdl){
+double QueryHandler::calculate_okapi_similarity(vector<double> df, vector<double> raw_tf){
     double k=1.2;
     double b=0.75;
     double qtf=1.0; //tf for query
     double w,dt,qt;
-    w= log((200 - df + 0.5)/(df+0.5));
-    qt=(k+1) * qtf / (k+qtf);
-    dt= [(k+1) * raw_tf] / [k * ((1-b) + b * dl/avdl)];
-    return w * dt * qt;
+    double sum=0;
+
+    //dl and avdl will be calculated here
+
+    for(int i = 0; i < df.size(); ++i){
+        w= log((200 - df.at(i) + 0.5)/(df.at(i)+0.5));
+       // dt= [(k+1) * raw_tf.at(i)] / [k * ((1-b) + b * dl.at(i)/avdl)];
+        qt=(k+1) * qtf / (k+qtf);
+        sum = sum + (w*dt*qt);
+    }
+   
+    return sum;
 }
 
 double QueryHandler::calculate_cosine_similarity(vector<double> p_weights, vector<double> q_weights){
