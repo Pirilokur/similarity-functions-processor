@@ -2,7 +2,7 @@ all: similarity dictionary cosin
 
 TARGET_EXEC ?= similarity dictionary cosin
 
-INTM_FILES ?= postings.txt dictionary.txt
+INTM_FILES ?= postings.txt dictionary.txt  size.txt
 
 SRC_DIRS ?= ./src
 BUILD_DIR ?= ./BUILD

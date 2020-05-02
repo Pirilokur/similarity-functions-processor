@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 
+
 #include "main.hpp"
 #include "tokenizer.hpp"
 #include "postinghandler.hpp"
@@ -49,6 +50,8 @@ int main(int argc, char * argv[]){
 	//run the tokenizer to create the term pair list.
 	Tokenizer t1(input_filename);
 	t_pairs = t1.tokenize();
+
+
 
 	//Run the PostingHandler to create the dictionary entries list.
 	PostingHandler p1(t_pairs);
