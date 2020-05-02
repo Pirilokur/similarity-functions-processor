@@ -139,7 +139,7 @@ void QueryHandler::process_query(){
                 
                 doc_freq.push_back(terms.get_dictionary_entry(query.terms.at(i)).document_freq);
                 raw_tf.push_back(temp.weight_tf);
-                terms.documents[temp.document_id].okapi_similarity = calculate_okapi_similarity(doc_freq,raw_tf);
+               // terms.documents[temp.document_id].okapi_similarity = calculate_okapi_similarity(doc_freq,raw_tf);
            }
        }
        //now check if all queues are empty
@@ -169,7 +169,7 @@ double QueryHandler::calculate_okapi_similarity(vector<double> df, vector<double
         sum = sum + (w*dt*qt);
     }
    
-    return sum;
+   // return sum;
 }
 
 double QueryHandler::calculate_cosine_similarity(vector<double> p_weights, vector<double> q_weights){
