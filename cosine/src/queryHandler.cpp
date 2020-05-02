@@ -130,8 +130,12 @@ void QueryHandler::process_query(){
                 query_weight.push_back(q_weight);
                 //get the cosine similarity now
                 terms.documents[temp.document_id].cosine_similarity = calculate_cosine_similarity(posting_weight, query_weight);
+                //terms.documents[temp.document_id].postings_weight.push_back(temp.weight_tf * idf_weight);
+               
            }
        }
+        terms.documents[temp.document_id].postings_weight = posting_weight;
+        //posting_weight.clear();
        //now check if all queues are empty
        for(int i = 0; i < number_of_terms; ++i){
            is_empty = true;
@@ -158,22 +162,29 @@ double QueryHandler::calculate_cosine_similarity(vector<double> p_weights, vecto
 void QueryHandler::print_results(string filename){
 
   outFile.open(filename);
-    for(int i = 0; i < 200; ++i){
-        if(terms.documents[i].cosine_similarity > 0){
-            cout << "document: " << i+1 << " " << terms.documents[i].document_id << " with a similarity of: " << terms.documents[i].cosine_similarity << endl;
-        }
-    }
+    //for(int i = 0; i < 200; ++i){
+       // if(terms.documents[i].cosine_similarity > 0){
+         //   cout << "document: " << i+1 << " " << terms.documents[i].document_id << " with a similarity of: " << terms.documents[i].cosine_similarity << endl;
+        //}
+    //}
 
     sort(begin(terms.documents), end(terms.documents), [](Document a, Document b) {return a.cosine_similarity > b.cosine_similarity;});
 
-    for(int i = 0; i < 200; ++i){
-        if(terms.documents[i].cosine_similarity > 0){
-            cout << "document: " << i+1 << " " << terms.documents[i].document_id << " with a similarity of: " << terms.documents[i].cosine_similarity << endl;
-        }
-    }
+    //for(int i = 0; i < 200; ++i){
+      //  if(terms.documents[i].cosine_similarity > 0){
+        //    cout << "document: " << i+1 << " " << terms.documents[i].document_id << " with a similarity of: " << terms.documents[i].cosine_similarity << endl;
+        //}
+    //}
 
+    /**
+     * This prints the results to the file
+     */ 
     for(int i = 0; i < 10; ++i){
         if(terms.documents[i].cosine_similarity > 0){
+            
+            for(int n = 0; n < query.terms.size(); ++n){
+                outFile << query.terms.at(n) << "," << (1.0/query.terms.size()) << ","<< terms.documents[i].postings_weight.at(n) << "," << (1.0/terms.documents[i].number_of_terms) << endl;
+            }
             outFile << terms.documents[i].document_id << ", " << terms.documents[i].cosine_similarity << endl;
         }
     }
