@@ -6,7 +6,9 @@
 #include <queue>
 #include <cmath>
 #include <algorithm>
+#include <fstream>
 #include "stemmer.h"
+#include "fileparser.hpp"
 
 using namespace std;
 
@@ -107,7 +109,17 @@ void QueryHandler::process_query(){
    vector<double> posting_weight;
    vector<double> query_weight;
    vector<double> doc_freq; // document frequency to be used for okapi
-   vector <double> raw_tf; // tf to be used for okapi
+   vector <double> raw_tf; // term frequency to be used for okapi
+   vector <double> dl; // document length to be used for okapi
+   vector<Document> doc_length;
+   FileParser fp("size.txt");
+   doc_length = fp.parse();
+   int sum=0;
+   double avdl;
+
+   
+
+
    while(!is_empty){
         int min = 2000;
        //get the next smallest document
@@ -117,7 +129,11 @@ void QueryHandler::process_query(){
                min = temp.document_id;
            }
        }
+       for(int i=0;i<200;i++){
+          sum+=doc_length.at(i);
+        }
 
+        avdl=sum/200;
 
 
 
@@ -136,10 +152,11 @@ void QueryHandler::process_query(){
                 //get the cosine similarity now
                 terms.documents[temp.document_id].cosine_similarity = calculate_cosine_similarity(posting_weight, query_weight);
                 //get the okapi similarity
-                
+                int x=terms.documents[temp.document_id];
+                dl.pushback(doc_length.at(i))
                 doc_freq.push_back(terms.get_dictionary_entry(query.terms.at(i)).document_freq);
                 raw_tf.push_back(temp.weight_tf);
-               // terms.documents[temp.document_id].okapi_similarity = calculate_okapi_similarity(doc_freq,raw_tf);
+               // terms.documents[temp.document_id].okapi_similarity = calculate_okapi_similarity(doc_freq,raw_tf,avdl,);
            }
        }
        //now check if all queues are empty
@@ -153,23 +170,22 @@ void QueryHandler::process_query(){
    }
 }
 
-double QueryHandler::calculate_okapi_similarity(vector<double> df, vector<double> raw_tf){
+double QueryHandler::calculate_okapi_similarity(vector<double> df, vector<double> raw_tf, vector <double> dl, int avdl){
     double k=1.2;
     double b=0.75;
     double qtf=1.0; //tf for query
     double w,dt,qt;
     double sum=0;
 
-    //dl and avdl will be calculated here
 
     for(int i = 0; i < df.size(); ++i){
         w= log((200 - df.at(i) + 0.5)/(df.at(i)+0.5));
-       // dt= [(k+1) * raw_tf.at(i)] / [k * ((1-b) + b * dl.at(i)/avdl)];
+        dt= [(k+1) * raw_tf.at(i)] / [k * ((1-b) + b * dl.at(i)/avdl)];
         qt=(k+1) * qtf / (k+qtf);
         sum = sum + (w*dt*qt);
     }
    
-   // return sum;
+    return sum;
 }
 
 double QueryHandler::calculate_cosine_similarity(vector<double> p_weights, vector<double> q_weights){
