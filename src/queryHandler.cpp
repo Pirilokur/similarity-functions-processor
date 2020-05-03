@@ -1,10 +1,12 @@
 #include "queryHandler.hpp"
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/split.hpp>
-#include<cstring>
+#include <cstring>
 #include <iostream>
+#include <sstream>
 #include <queue>
 #include <cmath>
+#include <vector>
 #include <algorithm>
 #include <fstream>
 #include "stemmer.h"
@@ -111,13 +113,22 @@ void QueryHandler::process_query(){
    vector<double> doc_freq; // document frequency to be used for okapi
    vector <double> raw_tf; // term frequency to be used for okapi
    vector <double> dl; // document length to be used for okapi
-   vector<Document> doc_length;
-   FileParser fp("size.txt");
+   vector<double> doc_length;
+   ifstream in("size.txt")
    //doc_length = fp.parse();   //TODO This is not a method in fileparser. Not sure what you're trying to do with this.
-   int sum=0;
+   double sum=0;
    double avdl;
+   string line;
 
-   
+   while(getline(in, line)){
+    istringstream lineStream(line);
+    double l;
+    lineStream >> l;
+    dl.push_back(l);
+  }
+
+  for(int i=0;i<dl.size();i++) sum+=dl.at(i); 
+  avdl=sum/200;
 
 
    while(!is_empty){
@@ -129,11 +140,7 @@ void QueryHandler::process_query(){
                min = temp.document_id;
            }
        }
-       for(int i=0;i<200;i++){
-          //sum+=doc_length.at(i); //TODO This is an error. doc_length is a vector of Documents, not doubles according to your code
-        }
-
-        avdl=sum/200;
+       
 
 
 
@@ -152,11 +159,11 @@ void QueryHandler::process_query(){
                 //get the cosine similarity now
                 terms.documents[temp.document_id].cosine_similarity = calculate_cosine_similarity(posting_weight, query_weight);
                 //get the okapi similarity
-                //int x=terms.documents[temp.document_id];  //TODO: terms.documents returns a document, not an int. Not sure what you're trying to set x equal to
-                //dl.push_back(doc_length.at(i)); //TODO: doc_length is a vector of documents. d1 is a vector of doubles. Cannot convert document to double. Not sure what data you were trying to get here.
+                int x=temp.document_id;  //TODO: terms.documents returns a document, not an int. Not sure what you're trying to set x equal to
+                doc_length.push_back(dl.at(x)); //TODO: doc_length is a vector of documents. d1 is a vector of doubles. Cannot convert document to double. Not sure what data you were trying to get here.
                 doc_freq.push_back(terms.get_dictionary_entry(query.terms.at(i)).document_freq);
                 raw_tf.push_back(temp.weight_tf);
-               // terms.documents[temp.document_id].okapi_similarity = calculate_okapi_similarity(doc_freq,raw_tf,avdl,);
+                terms.documents[temp.document_id].okapi_similarity = calculate_okapi_similarity(doc_freq,raw_tf,doc_length,avdl);
            }
        }
        //now check if all queues are empty
@@ -170,7 +177,7 @@ void QueryHandler::process_query(){
    }
 }
 
-double QueryHandler::calculate_okapi_similarity(vector<double> df, vector<double> raw_tf, vector <double> dl, int avdl){
+double QueryHandler::calculate_okapi_similarity(vector<double> df, vector<double> raw_tf, vector <double> dl, double avdl){
     double k=1.2;
     double b=0.75;
     double qtf=1.0; //tf for query
