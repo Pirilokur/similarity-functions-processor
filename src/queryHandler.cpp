@@ -161,7 +161,7 @@ void QueryHandler::process_query(){
                 query_weight.push_back(q_weight);
                 posting_weight.push_back(temp.weight_tf * idf_weight);
                 //get the cosine similarity now
-                terms.documents[temp.document_id].cosine_similarity = calculate_cosine_similarity(posting_weight, query_weight);
+                //terms.documents[temp.document_id].cosine_similarity = calculate_cosine_similarity(posting_weight, query_weight);
                 //get the okapi similarity
                 int x=temp.document_id;  //TODO: terms.documents returns a document, not an int. Not sure what you're trying to set x equal to
                 doc_length.push_back(dl.at(x)); //TODO: doc_length is a vector of documents. d1 is a vector of doubles. Cannot convert document to double. Not sure what data you were trying to get here.
