@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <vector>
 
+using namespace std;
 
 struct DictionaryEntry{
     std::string term;
@@ -25,7 +26,10 @@ struct Posting{
 struct Document{
     int number_of_terms;
     double cosine_similarity = 0.0;
+    double okapi_similarity= 0.0;
     int document_id;
+    vector<double> postings_weight;
+
 };
 
 class Terms{

@@ -30,7 +30,7 @@ class QueryHandler{
         Terms terms;
         std::vector<std::string> removeSpaces(std::string line);
         const int NUMBER_OF_DOCUMENTS = 201;
-        double calculate_okapi_similarity((vector<double> df, vector<double> raw_tf, vector <double> dl, double avdl);
+        double calculate_okapi_similarity(vector<double> df, vector<double> raw_tf, vector <double> dl, double avdl);
         double calculate_cosine_similarity(vector<double> p_weights, vector<double> q_weights);
 };
 

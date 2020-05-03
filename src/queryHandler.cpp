@@ -114,9 +114,9 @@ void QueryHandler::process_query(){
    vector <double> raw_tf; // term frequency to be used for okapi
    vector <double> dl; // document length to be used for okapi
    vector<double> doc_length;
-   ifstream in("size.txt")
+   ifstream in("size.txt");
    //doc_length = fp.parse();   //TODO This is not a method in fileparser. Not sure what you're trying to do with this.
-   double sum=0;
+   double sum=0.0;
    double avdl;
    string line;
 
@@ -127,8 +127,11 @@ void QueryHandler::process_query(){
     dl.push_back(l);
   }
 
-  for(int i=0;i<dl.size();i++) sum+=dl.at(i); 
-  avdl=sum/200;
+  for(int i=0;i<dl.size();i++){
+        sum = sum+ dl.at(i);
+    }
+
+    avdl = sum / 200.0;
 
 
    while(!is_empty){
@@ -156,6 +159,7 @@ void QueryHandler::process_query(){
                 q_weight = q_weight *  (200 / terms.get_dictionary_entry(query.terms.at(i)).document_freq);         //idf
                 //cout << "qeight is " << q_weight << endl;
                 query_weight.push_back(q_weight);
+                posting_weight.push_back(temp.weight_tf * idf_weight);
                 //get the cosine similarity now
                 terms.documents[temp.document_id].cosine_similarity = calculate_cosine_similarity(posting_weight, query_weight);
                 //get the okapi similarity
@@ -166,6 +170,8 @@ void QueryHandler::process_query(){
                 terms.documents[temp.document_id].okapi_similarity = calculate_okapi_similarity(doc_freq,raw_tf,doc_length,avdl);
            }
        }
+
+       terms.documents[temp.document_id].postings_weight = posting_weight;
        //now check if all queues are empty
        for(int i = 0; i < number_of_terms; ++i){
            is_empty = true;
@@ -211,23 +217,30 @@ double QueryHandler::calculate_cosine_similarity(vector<double> p_weights, vecto
 void QueryHandler::print_results(string filename){
 
   outFile.open(filename);
-    for(int i = 0; i < 200; ++i){
-        if(terms.documents[i].cosine_similarity > 0){
-            cout << "document: " << i+1 << " " << terms.documents[i].document_id << " with a similarity of: " << terms.documents[i].cosine_similarity << endl;
-        }
-    }
+    //for(int i = 0; i < 200; ++i){
+       // if(terms.documents[i].cosine_similarity > 0){
+         //   cout << "document: " << i+1 << " " << terms.documents[i].document_id << " with a similarity of: " << terms.documents[i].cosine_similarity << endl;
+        //}
+    //}
 
-    sort(begin(terms.documents), end(terms.documents), [](Document a, Document b) {return a.cosine_similarity > b.cosine_similarity;});
+    sort(begin(terms.documents), end(terms.documents), [](Document a, Document b) {return a.okapi_similarity > b.okapi_similarity;});
 
-    for(int i = 0; i < 200; ++i){
-        if(terms.documents[i].cosine_similarity > 0){
-            cout << "document: " << i+1 << " " << terms.documents[i].document_id << " with a similarity of: " << terms.documents[i].cosine_similarity << endl;
-        }
-    }
+    //for(int i = 0; i < 200; ++i){
+      //  if(terms.documents[i].cosine_similarity > 0){
+        //    cout << "document: " << i+1 << " " << terms.documents[i].document_id << " with a similarity of: " << terms.documents[i].cosine_similarity << endl;
+        //}
+    //}
 
+    /**
+     * This prints the results to the file
+     */ 
     for(int i = 0; i < 10; ++i){
-        if(terms.documents[i].cosine_similarity > 0){
-            outFile << terms.documents[i].document_id << ", " << terms.documents[i].cosine_similarity << endl;
+        if(terms.documents[i].okapi_similarity > 0){
+            
+            for(int n = 0; n < query.terms.size(); ++n){
+                outFile << query.terms.at(n) << "," << (1.0/query.terms.size()) << ","<< terms.documents[i].postings_weight.at(n) << "," << (1.0/terms.documents[i].number_of_terms) << endl;
+            }
+            outFile << terms.documents[i].document_id << ", " << terms.documents[i].okapi_similarity << endl;
         }
     }
     outFile.close();
@@ -266,11 +279,3 @@ void QueryHandler::print_results(string filename){
     */
     
 }
-
-
-
-
-
-
-
-
