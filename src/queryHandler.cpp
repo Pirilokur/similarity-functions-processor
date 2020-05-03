@@ -113,7 +113,7 @@ void QueryHandler::process_query(){
    vector <double> dl; // document length to be used for okapi
    vector<Document> doc_length;
    FileParser fp("size.txt");
-   doc_length = fp.parse();
+   //doc_length = fp.parse();   //TODO This is not a method in fileparser. Not sure what you're trying to do with this.
    int sum=0;
    double avdl;
 
@@ -130,7 +130,7 @@ void QueryHandler::process_query(){
            }
        }
        for(int i=0;i<200;i++){
-          sum+=doc_length.at(i);
+          //sum+=doc_length.at(i); //TODO This is an error. doc_length is a vector of Documents, not doubles according to your code
         }
 
         avdl=sum/200;
@@ -152,8 +152,8 @@ void QueryHandler::process_query(){
                 //get the cosine similarity now
                 terms.documents[temp.document_id].cosine_similarity = calculate_cosine_similarity(posting_weight, query_weight);
                 //get the okapi similarity
-                int x=terms.documents[temp.document_id];
-                dl.pushback(doc_length.at(i))
+                //int x=terms.documents[temp.document_id];  //TODO: terms.documents returns a document, not an int. Not sure what you're trying to set x equal to
+                //dl.push_back(doc_length.at(i)); //TODO: doc_length is a vector of documents. d1 is a vector of doubles. Cannot convert document to double. Not sure what data you were trying to get here.
                 doc_freq.push_back(terms.get_dictionary_entry(query.terms.at(i)).document_freq);
                 raw_tf.push_back(temp.weight_tf);
                // terms.documents[temp.document_id].okapi_similarity = calculate_okapi_similarity(doc_freq,raw_tf,avdl,);
@@ -180,7 +180,7 @@ double QueryHandler::calculate_okapi_similarity(vector<double> df, vector<double
 
     for(int i = 0; i < df.size(); ++i){
         w= log((200 - df.at(i) + 0.5)/(df.at(i)+0.5));
-        dt= [(k+1) * raw_tf.at(i)] / [k * ((1-b) + b * dl.at(i)/avdl)];
+        dt= ((k+1) * raw_tf.at(i)) / (k * ((1-b) + b * dl.at(i)/avdl));
         qt=(k+1) * qtf / (k+qtf);
         sum = sum + (w*dt*qt);
     }

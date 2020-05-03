@@ -5,9 +5,6 @@
 
 #include <cstdlib>
 #include "main.hpp"
-#include "tokenizer.hpp"
-#include "postinghandler.hpp"
-
 
 int main(int argc, char * argv[]){
 		//argument parsing
