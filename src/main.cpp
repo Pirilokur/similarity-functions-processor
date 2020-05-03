@@ -55,5 +55,7 @@ int main(int argc, char * argv[]){
 	*/
 	std::string cmd = "./dictionary -i 200_content.txt";
 	std::system(cmd.c_str());
-	
+	sleep(2); //ensure the files are done being created
+	cmd = "./cosin";
+	std::system(cmd.c_str());
 }
