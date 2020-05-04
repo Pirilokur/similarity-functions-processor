@@ -1,0 +1,12 @@
+Query1: Europe
+Relevant results: 9,13,81,102,109
+
+Query2: Stock Rally
+Relevant Results: 2,17,19,102,103
+
+Query3: Debt Crisis
+Relevant Results: 34, 96, 98
+
+Query4: Stock Future Higher
+Relevant Results: 2,3,4,5,6,7
+

@@ -1,0 +1,9 @@
+This program was done primarily in C++ but the Porter's Stemmer (taken from Porter's website) was done in C.
+As far as we know, the project is fully complete. The cosine similarity is the same as project 2 so any 
+errors from project 2 would also be in this project (we have not yet received feedback from project 2 so
+we do not know how correct the project is.)
+
+The actual cosine similarity accuracy was a bit disappointing, with a MAP@5 value of 0.5 and MAP@10 of 0.475.
+This might be due to some of the grammar not being properly tokenized since some of the grammatical symbols were
+multi-line chars and thus could not be removed easily without using a third party tokenizer (which defeats the 
+purpose of the project...)
