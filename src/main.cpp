@@ -17,18 +17,6 @@ int main(int argc, char * argv[]){
     Terms t1, t2, t3, t4;
     string chosen_query;
 
-   /*string query1 = "europe";
-    string query2 = "stock rally";
-    string query3 = "debt crisis";
-    string query4 = "stock future higher";
-
-    cout << "Please choose one of the queries below by entering the query number" << endl <<"1: europe " << endl;
-    cout << "2: stock rally" << endl << "3: debt crisis" << endl << "4: stock future higher" << endl;
-    cin >> x;
-    if (x==1) chosen_query=query1;
-    else if (x==2) chosen_query=query2;
-    else if (x==3) chosen_query=query3;
-    else if (x==4) chosen_query=query4;*/
 
 
     t1.populate_data(dictionary_filename, postings_filename);

@@ -189,9 +189,10 @@ double QueryHandler::calculate_okapi_similarity(vector<double> df, vector<double
     double qtf=1.0; //tf for query
     double w,dt,qt;
     double sum=0;
+    int sz= = query.terms.size();
 
 
-    for(int i = 0; i < df.size(); ++i){
+    for(int i = 0; i < sz; ++i){
         w= log((200 - df.at(i) + 0.5)/(df.at(i)+0.5));
         dt= ((k+1) * raw_tf.at(i)) / (k * ((1-b) + b * dl.at(i)/avdl));
         qt=(k+1) * qtf / (k+qtf);
